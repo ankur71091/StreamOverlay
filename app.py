@@ -1,26 +1,26 @@
 from flask import Flask, request, jsonify
-from bs4 import BeautifulSoup
-import requests
 from flask_cors import CORS
+from playwright.sync_api import sync_playwright
 import os
 app = Flask(__name__)
 CORS(app)
 @app.route("/")
 def home():
-   return "API is live"
+   return "Playwright-based scraper is live!"
 @app.route("/score")
-def get_score_html():
+def get_score():
    match_url = request.args.get("url")
    if not match_url:
        return jsonify({"error": "Missing 'url' query parameter"}), 400
-   headers = {"User-Agent": "Mozilla/5.0"}
    try:
-       res = requests.get(match_url, headers=headers)
-       soup = BeautifulSoup(res.text, "html.parser")
-       div = soup.find("div", {"class": "BoxStyle__BottomSection-xydo28-3"})
-       if not div:
-           return jsonify({"error": "Score section not found"}), 404
-       return div.decode_contents()
+       with sync_playwright() as p:
+           browser = p.chromium.launch(headless=True)
+           page = browser.new_page()
+           page.goto(match_url, timeout=60000)
+           page.wait_for_selector("div.BoxStyle__BottomSection-xydo28-3.fTKnqN", timeout=10000)
+           html = page.inner_html("div.BoxStyle__BottomSection-xydo28-3.fTKnqN")
+           browser.close()
+           return html
    except Exception as e:
        return jsonify({"error": str(e)}), 500
 if __name__ == "__main__":
