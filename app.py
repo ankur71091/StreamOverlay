@@ -17,7 +17,7 @@ def get_score_html():
    try:
        res = requests.get(match_url, headers=headers)
        soup = BeautifulSoup(res.text, "html.parser")
-       div = soup.find("div", {"class": "BoxStyle__BottomSection-xydo28-3 fTKnqN"})
+       div = soup.find("div", {"class": "BoxStyle__BottomSection-xydo28-3"})
        if not div:
            return jsonify({"error": "Score section not found"}), 404
        return div.decode_contents()
