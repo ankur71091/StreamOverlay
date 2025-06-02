@@ -1,63 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <title>Live Score Overlay</title>
 <style>
    body {
      margin: 0;
+     padding: 10px;
+     font-family: Arial, sans-serif;
      background: transparent;
      color: white;
-     font-family: sans-serif;
    }
-   #score-container {
-     background-color: rgba(0, 0, 0, 0.6);
-     padding: 10px;
-     border-radius: 8px;
-     font-size: 16px;
-   }
-   #form-area {
-     background-color: black;
-     padding: 10px;
-     margin-bottom: 10px;
-   }
-   input {
-     width: 80%;
-     padding: 6px;
-     font-size: 14px;
-   }
-   button {
-     padding: 6px 10px;
-     font-size: 14px;
+   #score {
+     font-size: 18px;
+     line-height: 1.4;
    }
 </style>
 </head>
 <body>
-<div id="form-area">
-<input type="text" id="url-input" placeholder="Paste match URL here" />
-<button onclick="setMatchUrl()">Load</button>
-</div>
-<div id="score-container">Paste a match URL and click Load</div>
+<div id="score">Loading score...</div>
 <script>
-   let intervalId;
-   function setMatchUrl() {
-     const rawUrl = document.getElementById("url-input").value;
-     if (!rawUrl) return;
-     const encodedUrl = encodeURIComponent(rawUrl);
-     const apiUrl = `https://streamoverlay.onrender.com/score?url=${encodedUrl}`;
-     fetchAndUpdate(apiUrl);
-     if (intervalId) clearInterval(intervalId);
-     intervalId = setInterval(() => fetchAndUpdate(apiUrl), 10000);
-   }
-   async function fetchAndUpdate(apiUrl) {
+   const matchUrl = "https://escalive.com/match/137112-7249900/scorecard/?period=2939456";
+   const apiUrl = "https://streamoverlay-1.onrender.com/score?url=" + encodeURIComponent(matchUrl);
+   async function fetchScore() {
      try {
-       const res = await fetch(apiUrl);
-       const html = await res.text();
-       document.getElementById("score-container").innerHTML = html;
-     } catch {
-       document.getElementById("score-container").innerText = "Failed to load score.";
+       const response = await fetch(apiUrl);
+       const html = await response.text();
+       document.getElementById("score").innerHTML = html;
+     } catch (e) {
+       document.getElementById("score").textContent = "Failed to load score.";
+       console.error(e);
      }
    }
+   // Initial fetch
+   fetchScore();
+   // Refresh every 30 seconds
+   setInterval(fetchScore, 30000);
 </script>
 </body>
 </html>
