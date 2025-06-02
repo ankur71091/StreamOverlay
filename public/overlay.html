@@ -44,7 +44,7 @@
      const rawUrl = document.getElementById("url-input").value;
      if (!rawUrl) return;
      const encodedUrl = encodeURIComponent(rawUrl);
-     const apiUrl = `https://your-render-url.onrender.com/score?url=${encodedUrl}`;
+     const apiUrl = `https://streamoverlay.onrender.com/score?url=${encodedUrl}`;
      fetchAndUpdate(apiUrl);
      if (intervalId) clearInterval(intervalId);
      intervalId = setInterval(() => fetchAndUpdate(apiUrl), 10000);
