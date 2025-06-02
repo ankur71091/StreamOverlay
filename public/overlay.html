@@ -16,22 +16,48 @@
      border-radius: 8px;
      font-size: 16px;
    }
+   #form-area {
+     background-color: black;
+     padding: 10px;
+     margin-bottom: 10px;
+   }
+   input {
+     width: 80%;
+     padding: 6px;
+     font-size: 14px;
+   }
+   button {
+     padding: 6px 10px;
+     font-size: 14px;
+   }
 </style>
 </head>
 <body>
-<div id="score-container">Loading live score...</div>
+<div id="form-area">
+<input type="text" id="url-input" placeholder="Paste match URL here" />
+<button onclick="setMatchUrl()">Load</button>
+</div>
+<div id="score-container">Paste a match URL and click Load</div>
 <script>
-   async function fetchScore() {
+   let intervalId;
+   function setMatchUrl() {
+     const rawUrl = document.getElementById("url-input").value;
+     if (!rawUrl) return;
+     const encodedUrl = encodeURIComponent(rawUrl);
+     const apiUrl = `https://your-render-url.onrender.com/score?url=${encodedUrl}`;
+     fetchAndUpdate(apiUrl);
+     if (intervalId) clearInterval(intervalId);
+     intervalId = setInterval(() => fetchAndUpdate(apiUrl), 10000);
+   }
+   async function fetchAndUpdate(apiUrl) {
      try {
-       const res = await fetch("https://your-api-url/score");
+       const res = await fetch(apiUrl);
        const html = await res.text();
        document.getElementById("score-container").innerHTML = html;
-     } catch (e) {
+     } catch {
        document.getElementById("score-container").innerText = "Failed to load score.";
      }
    }
-   fetchScore();
-   setInterval(fetchScore, 10000); // refresh every 10 seconds
 </script>
 </body>
 </html>
