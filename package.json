@@ -1,0 +1,8 @@
+{
+ "name": "stream-overlay",
+ "version": "1.0.0",
+ "dependencies": {
+   "@sparticuz/chromium": "^110.0.0",
+   "playwright-core": "^1.30.0"
+ }
+}
