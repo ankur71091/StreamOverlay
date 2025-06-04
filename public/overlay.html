@@ -21,7 +21,7 @@
 <div id="score">Loading score...</div>
 <script>
    const matchUrl = "https://escalive.com/match/137112-7249900/scorecard/?period=2939456";
-   const apiUrl = "https://streamoverlay-1.onrender.com/score?url=" + encodeURIComponent(matchUrl);
+   const apiUrl = "/api/score?url=" + encodeURIComponent(matchUrl);
    async function fetchScore() {
      try {
        const response = await fetch(apiUrl);
@@ -35,7 +35,7 @@
    // Initial fetch
    fetchScore();
    // Refresh every 30 seconds
-   setInterval(fetchScore, 300000);
+   setInterval(fetchScore, 30000);
 </script>
 </body>
 </html>
