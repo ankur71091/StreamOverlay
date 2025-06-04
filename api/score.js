@@ -1,4 +1,4 @@
-import { chromium } from 'playwright-core';
+import { chromium } from '@vercel/playwright';
 export default async function handler(req, res) {
  const matchUrl = req.query.url;
  if (!matchUrl) {
@@ -6,12 +6,9 @@ export default async function handler(req, res) {
  }
  let browser;
  try {
-   browser = await chromium.launch({
-     headless: true,
-     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-   });
+   browser = await chromium.launch({ headless: true });
    const page = await browser.newPage();
-   await page.goto(matchUrl, { waitUntil: 'networkidle', timeout: 60000 });
+   await page.goto(matchUrl, { waitUntil: 'networkidle' });
    await page.waitForSelector('div.BoxStyle__BottomSection-xydo28-3.fTKnqN', { timeout: 10000 });
    const html = await page.$eval('div.BoxStyle__BottomSection-xydo28-3.fTKnqN', el => el.innerHTML);
    res.status(200).send(html);
