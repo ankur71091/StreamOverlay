@@ -1,6 +1,0 @@
-{
- "type": "module",
- "dependencies": {
-   "@vercel/playwright": "^1.41.1"
- }
-}
