@@ -1,11 +1,8 @@
 {
- "version": 2,
- "public": true,
- "builds": [],
- "routes": [
-   {
-     "src": "/(.*)",
-     "dest": "/overlay.html"
+ "functions": {
+   "api/score.js": {
+     "memory": 1024,
+     "maxDuration": 10
    }
- ]
+ }
 }
