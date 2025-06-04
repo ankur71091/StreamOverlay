@@ -1,41 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
 <title>Live Score Overlay</title>
 <style>
    body {
-     margin: 0;
-     padding: 10px;
-     font-family: Arial, sans-serif;
      background: transparent;
      color: white;
-   }
-   #score {
-     font-size: 18px;
-     line-height: 1.4;
+     font-family: sans-serif;
    }
 </style>
 </head>
 <body>
 <div id="score">Loading score...</div>
 <script>
-   const matchUrl = "https://escalive.com/match/137112-7249900/scorecard/?period=2939456";
-   const apiUrl = "/api/score?url=" + encodeURIComponent(matchUrl);
-   async function fetchScore() {
-     try {
-       const response = await fetch(apiUrl);
-       const html = await response.text();
-       document.getElementById("score").innerHTML = html;
-     } catch (e) {
-       document.getElementById("score").textContent = "Failed to load score.";
-       console.error(e);
-     }
+   const params = new URLSearchParams(window.location.search);
+   const matchUrl = params.get("url");
+   if (!matchUrl) {
+     document.getElementById("score").innerText = "Missing match URL.";
+   } else {
+     fetch(matchUrl)
+       .then(res => res.text())
+       .then(html => {
+         const parser = new DOMParser();
+         const doc = parser.parseFromString(html, "text/html");
+         const scoreDiv = doc.querySelector("div.BoxStyle__BottomSection-xydo28-3.fTKnqN");
+         if (scoreDiv) {
+           document.getElementById("score").innerHTML = scoreDiv.innerHTML;
+         } else {
+           document.getElementById("score").innerText = "Score not found.";
+         }
+       })
+       .catch(err => {
+         document.getElementById("score").innerText = "Failed to load score: " + err;
+       });
    }
-   // Initial fetch
-   fetchScore();
-   // Refresh every 30 seconds
-   setInterval(fetchScore, 30000);
 </script>
 </body>
 </html>
