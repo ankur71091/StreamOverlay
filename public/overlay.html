@@ -23,7 +23,7 @@
        .then(html => {
          const parser = new DOMParser();
          const doc = parser.parseFromString(html, "text/html");
-         const scoreDiv = doc.querySelector("div.BoxStyle__BottomSection-xydo28-3.fTKnqN");
+         const scoreDiv = doc.querySelector("div.matchHeaderWrap");
          if (scoreDiv) {
            document.getElementById("score").innerHTML = scoreDiv.innerHTML;
          } else {
